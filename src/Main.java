@@ -15,7 +15,7 @@ public class Main {
         manager.createEpic(epic2);
 
         Subtask subtask1 = new Subtask("Первая подзадача", "Описание первой подзадачи", epic1.getId());
-        Subtask subtask2 = new Subtask("Вторая подзадача", "Описание второй подзадачи", epic2.getId());
+        Subtask subtask2 = new Subtask("Вторая подзадача", "Описание второй подзадачи", epic1.getId());
         manager.createSubtask(subtask1);
         manager.createSubtask(subtask2);
 

@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Objects;
 
 public class TaskManager {
     private int nextId = 1;
@@ -30,6 +31,7 @@ public class TaskManager {
         int selectedId = task.getId();
         if (tasks.containsKey(selectedId)) {
             tasks.replace(selectedId, task);
+            updateEpicStatus(task.getId());
         }
     }
 
@@ -136,34 +138,46 @@ public class TaskManager {
         if (epicSubtasks.isEmpty()) {
             epic.setStatus(Status.NEW);
         } else {
-            boolean New = false;
-            boolean InProgress = false;
-            boolean Done = false;
+            boolean newstatus = false;
+            boolean inProgress = false;
+            boolean done = false;
 
             for (Subtask subtask : epicSubtasks) {
                 switch (subtask.getStatus()) {
                     case DONE:
-                        Done = true;
+                        done = true;
                         break;
                     case IN_PROGRESS:
-                        InProgress = true;
+                        inProgress = true;
                         break;
                     case NEW:
-                        New = true;
+                        newstatus = true;
                         break;
                 }
-                if (Done || InProgress) {
+                if (done || inProgress) {
                     break;
                 }
             }
-            if (Done) {
+            if (done) {
                 epic.setStatus(Status.DONE);
-            } else if (InProgress) {
+            } else if (inProgress) {
                 epic.setStatus(Status.IN_PROGRESS);
-            } else if (New) {
+            } else if (newstatus) {
                 epic.setStatus(Status.NEW);
             }
         }
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        TaskManager that = (TaskManager) o;
+        return nextId == that.nextId && Objects.equals(tasks, that.tasks) && Objects.equals(epics, that.epics) && Objects.equals(subtasks, that.subtasks);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(nextId, tasks, epics, subtasks);
+    }
 }

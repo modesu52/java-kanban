@@ -1,13 +1,13 @@
 class Subtask extends Task {
-    private final int EpicId;
+    private final int epicId;
 
     public Subtask(String name, String description, int epicId) {
         super(name, description);
-        this.EpicId = epicId;
+        this.epicId = epicId;
     }
 
     public int getEpicId() {
-        return EpicId;
+        return epicId;
     }
 
     @Override
