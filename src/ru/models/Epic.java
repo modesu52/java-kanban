@@ -1,7 +1,9 @@
+package ru.models;
+
 import java.util.ArrayList;
 import java.util.Objects;
 
-class Epic extends Task {
+public class Epic extends Task {
     private final ArrayList<Integer> subtaskIds = new ArrayList<>();
 
     public Epic(String name, String description) {

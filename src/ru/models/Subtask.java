@@ -1,6 +1,8 @@
+package ru.models;
+
 import java.util.Objects;
 
-class Subtask extends Task {
+public class Subtask extends Task {
     private final int epicId;
 
     public Subtask(String name, String description, int epicId) {
@@ -14,7 +16,7 @@ class Subtask extends Task {
 
     @Override
     public String toString() {
-        return "Subtask{" +
+        return "ru.models.Subtask{" +
                 "epicId=" + getEpicId() +
                 ", name='" + getName() + '\'' +
                 ", description='" + getDescription() + '\'' +
