@@ -9,7 +9,7 @@ import java.util.ArrayList;
 
 public class Main {
     public static void main(String[] args) {
-        TaskManager manager = new TaskManager();
+        TaskManager manager = Managers.getDefault();
 
         Task task1 = new Task("Первая задача", "Описание первой задачи");
         Task task2 = new Task("Вторая задача", "Описание второй задачи");
@@ -51,6 +51,16 @@ public class Main {
         subtask2.setStatus(Status.NEW);
         manager.updateSubtask(subtask1);
         manager.updateSubtask(subtask2);
+
+        manager.getTask(task1.getId());
+        manager.getEpic(epic1.getId());
+        manager.getSubtask(subtask1.getId());
+        manager.getTask(task2.getId());
+
+        System.out.println("\nИстория просмотров:");
+        for (Task task : manager.getHistory()) {
+            System.out.println(task);
+        }
 
         System.out.println("updates:");
         System.out.println("task 1: " + task1.getStatus().toString());
