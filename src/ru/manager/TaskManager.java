@@ -1,4 +1,4 @@
-package ru.Manager;
+package ru.manager;
 
 import ru.models.Epic;
 import ru.models.Subtask;
