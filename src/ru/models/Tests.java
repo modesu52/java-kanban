@@ -154,4 +154,26 @@ class Tests {
         assertTrue(taskManager.getAllSubtasks().isEmpty());
         assertTrue(taskManager.getHistory().isEmpty());
     }
+
+    @Test
+    void subtasksWithSameIdShouldBeEqual() {
+        Subtask subtask1 = new Subtask("Подзадача 1", "Описание 1", 1);
+        subtask1.setId(1);
+
+        Subtask subtask2 = new Subtask("Подзадача 2", "Описание 2", 1);
+        subtask2.setId(1);
+
+        assertEquals(subtask1, subtask2, "Подзадачи с одинаковым ID должны быть равны");
+
+        assertEquals(subtask2, subtask1, "Метод equals должен быть симметричным");
+
+    }
+
+    @Test
+    void epicCannotBeItsOwnSubtask() {
+        Epic epic = new Epic("Важный эпик", "Описание эпика");
+        epic.setId(1);
+
+        assertTrue(epic.getSubtaskIds().isEmpty(), "У нового эпика не должно быть подзадач");
+    }
 }
