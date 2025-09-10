@@ -11,68 +11,79 @@ public class Main {
     public static void main(String[] args) {
         TaskManager manager = Managers.getDefault();
 
-        Task task1 = new Task("Первая задача", "Описание первой задачи");
-        Task task2 = new Task("Вторая задача", "Описание второй задачи");
-        manager.createTask(task1);
-        manager.createTask(task2);
+        System.out.println("1. Неограниченная история:");
+        for (int i = 1; i <= 10; i++) {
+            Task task = new Task("Задача " + i, "Описание " + i);
+            manager.createTask(task);
+            manager.getTask(task.getId());
+        }
+        System.out.println("   Создано " + manager.getAllTasks().size() + " задач, все в истории");
+        System.out.println("   Размер истории: " + manager.getHistory().size());
 
-        Epic epic1 = new Epic("Первый эпик", "Описание первого эпика");
-        Epic epic2 = new Epic("Второй эпик", "Описание второго эпика");
+        System.out.println("\n2. Удаление дубликатов:");
+        System.out.println("   Просматриваем задачу 5 несколько раз...");
+        for (int i = 0; i < 5; i++) {
+            manager.getTask(4);
+        }
+        System.out.println("   Размер истории после 5 дублирующих просмотров: " + manager.getHistory().size());
+        System.out.println("   В истории осталась только одна копия задачи 5!");
+        System.out.println(manager.getHistory());
+
+        System.out.println("\n3. Порядок просмотров:");
+        manager.getTask(1);
+        manager.getTask(2);
+        manager.getTask(3);
+
+        ArrayList<Task> history = manager.getHistory();
+        System.out.println("   Последние 3 просмотра:");
+        System.out.println(history);
+
+        System.out.println("\n4. Автоматическое удаление из истории:");
+        System.out.println("   Размер истории до удаления: " + manager.getHistory().size());
+        manager.deleteTask(5);
+        System.out.println("   Размер истории после удаления задачи 5: " + manager.getHistory().size());
+
+        boolean task5InHistory = false;
+        for (Task task : manager.getHistory()) {
+            if (task.getId() == 5) {
+                task5InHistory = true;
+                break;
+            }
+        }
+        System.out.println("   Задача 5 в истории: " + task5InHistory);
+
+        System.out.println("\n5. Работа с эпиками и подзадачами:");
+        Epic epic1 = new Epic("Эпик 1", "Описание эпика 1");
+        Epic epic2 = new Epic("Эпик 2", "Описание эпика 2");
         manager.createEpic(epic1);
         manager.createEpic(epic2);
 
-        Subtask subtask1 = new Subtask("Первая подзадача", "Описание первой подзадачи", epic1.getId());
-        Subtask subtask2 = new Subtask("Вторая подзадача", "Описание второй подзадачи", epic1.getId());
+        Subtask subtask1 = new Subtask("Подзадача 1", "Описание подзадачи 1", epic1.getId());
+        Subtask subtask2 = new Subtask("Подзадача 2", "Описание подзадачи 2", epic1.getId());
         manager.createSubtask(subtask1);
         manager.createSubtask(subtask2);
 
-
-
-        System.out.println("all tasks:");
-        ArrayList<Task> allTasks = manager.getAllTasks();
-        for (Task task : allTasks) {
-            System.out.println(task.toString());
-        }
-
-        System.out.println("all epics:");
-        ArrayList<Epic> allEpics = manager.getAllEpics();
-        for (Epic epic : allEpics) {
-            System.out.println(epic.toString());
-        }
-
-        System.out.println("all subtasks:");
-        System.out.println(manager.getAllSubtasks());
-
-
-        task1.setStatus(Status.IN_PROGRESS);
-        manager.updateTask(task1);
-
-        subtask1.setStatus(Status.DONE);
-        subtask2.setStatus(Status.NEW);
-        manager.updateSubtask(subtask1);
-        manager.updateSubtask(subtask2);
-
-        manager.getTask(task1.getId());
+        manager.getTask(1);
         manager.getEpic(epic1.getId());
         manager.getSubtask(subtask1.getId());
-        manager.getTask(task2.getId());
+        manager.getSubtask(subtask2.getId());
 
-        System.out.println("\nИстория просмотров:");
+        System.out.println("   История содержит разные типы задач:");
         for (Task task : manager.getHistory()) {
-            System.out.println(task);
+            String type = task.getClass().getSimpleName();
+            System.out.println("   - " + type + " #" + task.getId() + ": " + task.getName());
         }
 
-        System.out.println("updates:");
-        System.out.println("task 1: " + task1.getStatus().toString());
-        System.out.println("subtask 1: " + subtask1.getStatus().toString());
-        System.out.println("subtask 2: " + subtask2.getStatus().toString());
+        System.out.println("\n6. Удаление эпика и его подзадач из истории:");
+        System.out.println("   Размер истории до удаления эпика: " + manager.getHistory().size());
+        manager.deleteEpic(epic1.getId());
+        System.out.println("   Размер истории после удаления эпика: " + manager.getHistory().size());
 
-        manager.deleteTask(task1.getId());
-        manager.deleteEpic(epic2.getId());
-
-        System.out.println("\nПосле удаления:");
-        System.out.println("Все задачи: " + manager.getAllTasks());
-        System.out.println("Все эпики: " + manager.getAllEpics());
-        System.out.println("Все подзадачи: " + manager.getAllSubtasks());
+        System.out.println("\n7. Финальная проверка:");
+        System.out.println("   Все задачи в истории:");
+        for (Task task : manager.getHistory()) {
+            System.out.println("   - " + task.getName() + " (ID: " + task.getId() + ")");
+        }
+        System.out.println("   Итоговый размер истории: " + manager.getHistory().size());
     }
 }

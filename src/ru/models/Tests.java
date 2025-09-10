@@ -18,7 +18,7 @@ class Tests {
         historyManager = Managers.getDefaultHistory();
     }
 
-    // Тесты для модели Task
+
     @Test
     void taskEqualityById() {
         Task task1 = new Task("Task 1", "Description");
@@ -47,7 +47,7 @@ class Tests {
         int epicId = taskManager.createEpic(epic);
 
         Subtask subtask = new Subtask("Sub", "Desc", epicId);
-        taskManager.createSubtask(subtask); // Убрано присваивание
+        taskManager.createSubtask(subtask);
 
         assertEquals(Status.NEW, taskManager.getEpic(epicId).getStatus());
 
@@ -60,10 +60,6 @@ class Tests {
         assertEquals(Status.DONE, taskManager.getEpic(epicId).getStatus());
     }
 
-
-
-
-    // Тесты для TaskManager
     @Test
     void shouldCreateAndRetrieveAllTaskTypes() {
 
@@ -85,13 +81,12 @@ class Tests {
         int genId = taskManager.createTask(task1);
 
         Task task2 = new Task("Task 2", "Desc");
-        task2.setId(genId); // Пытаемся использовать существующий ID
+        task2.setId(genId);
 
         int newId = taskManager.createTask(task2);
         assertNotEquals(genId, newId, "ID должны быть уникальными");
     }
 
-    // Тесты для HistoryManager
     @Test
     void shouldAddTasksToHistory() {
         Task task = new Task("Task", "Desc");
@@ -104,14 +99,14 @@ class Tests {
     }
 
     @Test
-    void historyShouldNotExceedMaxSize() {
+    void historyShouldNotHaveLimit() {
         for (int i = 1; i <= 15; i++) {
             Task task = new Task("Task " + i, "Desc");
             task.setId(i);
             historyManager.add(task);
         }
 
-        assertEquals(10, historyManager.getHistory().size());
+        assertEquals(15, historyManager.getHistory().size());
     }
 
     @Test
@@ -129,7 +124,6 @@ class Tests {
         assertEquals(2, history.get(1).getId());
     }
 
-    // Интеграционные тесты
     @Test
     void taskManagerShouldTrackHistory() {
         Task task = new Task("Task", "Desc");
@@ -140,7 +134,6 @@ class Tests {
 
         taskManager.getTask(taskId);
         taskManager.getEpic(epicId);
-
         ArrayList<Task> history = taskManager.getHistory();
         assertEquals(2, history.size());
         assertEquals(task, history.get(0));
@@ -175,5 +168,81 @@ class Tests {
         epic.setId(1);
 
         assertTrue(epic.getSubtaskIds().isEmpty(), "У нового эпика не должно быть подзадач");
+    }
+
+    @Test
+    void duplicateTasksShouldBeRemoved() {
+        Task task = new Task("Test", "Desc");
+        task.setId(1);
+
+        historyManager.add(task);
+        historyManager.add(task);
+        historyManager.add(task);
+
+        assertEquals(1, historyManager.getHistory().size());
+    }
+
+    @Test
+    void removeTaskFromHistory() {
+        Task task1 = new Task("Task 1", "Desc");
+        Task task2 = new Task("Task 2", "Desc");
+        task1.setId(1);
+        task2.setId(2);
+
+        historyManager.add(task1);
+        historyManager.add(task2);
+
+        historyManager.remove(1);
+
+        assertEquals(1, historyManager.getHistory().size());
+        assertEquals(2, historyManager.getHistory().get(0).getId());
+    }
+
+    @Test
+    void getTaskAddsToHistory() {
+        Task task = new Task("Test", "Desc");
+        int taskId = taskManager.createTask(task);
+
+        taskManager.getTask(taskId);
+
+        assertEquals(1, taskManager.getHistory().size());
+        assertEquals(taskId, taskManager.getHistory().get(0).getId());
+    }
+
+    @Test
+    void deleteTaskRemovesFromHistory() {
+        Task task = new Task("Test", "Desc");
+        int taskId = taskManager.createTask(task);
+
+        taskManager.getTask(taskId);
+        taskManager.deleteTask(taskId);
+
+        assertEquals(0, taskManager.getHistory().size());
+    }
+
+    @Test
+    void multipleGetsOfSameTask() {
+        Task task = new Task("Test", "Desc");
+        int taskId = taskManager.createTask(task);
+
+        for (int i = 0; i < 5; i++) {
+            taskManager.getTask(taskId);
+        }
+
+        assertEquals(1, taskManager.getHistory().size());
+    }
+
+    @Test
+    void emptyHistoryWhenNoTasksViewed() {
+        Task task = new Task("Test", "Desc");
+        taskManager.createTask(task); // Создаем, но не смотрим
+
+        assertEquals(0, taskManager.getHistory().size());
+    }
+
+    @Test
+    void getNonExistentTask() {
+        assertNull(taskManager.getTask(999)); // Несуществующий ID
+        assertEquals(0, taskManager.getHistory().size());
     }
 }
