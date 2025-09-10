@@ -1,15 +1,10 @@
-package ru.test;
+package ru.models;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import ru.manager.HistoryManager;
 import ru.manager.Managers;
 import ru.manager.TaskManager;
-import ru.models.Epic;
-import ru.models.Status;
-import ru.models.Subtask;
-import ru.models.Task;
-
 import java.util.ArrayList;
 import static org.junit.jupiter.api.Assertions.*;
 
