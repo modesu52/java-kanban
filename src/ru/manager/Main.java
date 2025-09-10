@@ -1,7 +1,6 @@
 package ru.manager;
 
 import ru.models.Epic;
-import ru.models.Status;
 import ru.models.Subtask;
 import ru.models.Task;
 
