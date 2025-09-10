@@ -153,6 +153,7 @@ public class InMemoryTaskManager implements TaskManager {
     public void clearAllTasks() {
         tasks.clear();
     }
+
     @Override
     public ArrayList<Subtask> getEpicSubtasks(int epicId) {
         ArrayList<Subtask> result = new ArrayList<>();
