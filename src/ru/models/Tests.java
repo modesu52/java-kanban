@@ -2,9 +2,9 @@ package ru.models;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import ru.Manager.HistoryManager;
-import ru.Manager.Managers;
-import ru.Manager.TaskManager;
+import ru.manager.HistoryManager;
+import ru.manager.Managers;
+import ru.manager.TaskManager;
 import java.util.ArrayList;
 import static org.junit.jupiter.api.Assertions.*;
 
