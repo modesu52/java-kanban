@@ -12,24 +12,35 @@ public interface TaskManager {
     ArrayList<Task> getAllTasks();
 
     Task getTask(int id);
+
     void deleteTask(int id);
+
     void updateTask(Task task);
 
     int createEpic(Epic epic);
+
     ArrayList<Epic> getAllEpics();
+
     Epic getEpic(int id);
 
     void updateEpic(Epic epic);
+
     void deleteEpic(int id);
+
     void createSubtask(Subtask subtask);
+
     ArrayList<Subtask> getAllSubtasks();
 
     Subtask getSubtask(int id);
+
     void updateSubtask(Subtask subtask);
+
     void deleteSubtask(int id);
+
     void clearAllTasks();
 
     ArrayList<Subtask> getEpicSubtasks(int epicId);
+
     void updateEpicStatus(int epicId);
 
     ArrayList<Task> getHistory();
