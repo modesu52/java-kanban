@@ -16,13 +16,15 @@ public class Subtask extends Task {
 
     @Override
     public String toString() {
-        return "ru.models.Subtask{" +
-                "epicId=" + getEpicId() +
+        return "Subtask{" +
+                "id=" + getId() +
                 ", name='" + getName() + '\'' +
                 ", description='" + getDescription() + '\'' +
                 ", status=" + getStatus() +
+                ", epicId=" + epicId +
                 '}';
     }
+
 
     @Override
     public boolean equals(Object o) {

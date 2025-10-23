@@ -79,7 +79,9 @@ public class InMemoryTaskManager implements TaskManager {
     public void updateEpic(Epic epic) {
         int selectedId = epic.getId();
         if (epics.containsKey(selectedId)) {
-            epics.replace(selectedId, epic);
+            Epic existingEpic = epics.get(selectedId);
+            existingEpic.setName(epic.getName());
+            existingEpic.setDescription(epic.getDescription());
         }
     }
 
@@ -87,7 +89,7 @@ public class InMemoryTaskManager implements TaskManager {
     public void deleteEpic(int id) {
         Epic epic = epics.remove(id);
         if (epic != null) {
-            for (int subtaskId : new ArrayList<>(epic.getSubtaskIds())) {
+            for (int subtaskId : epic.getSubtaskIds()) {
                 subtasks.remove(subtaskId);
                 historyManager.remove(subtaskId);
             }
@@ -151,7 +153,38 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void clearAllTasks() {
+        // Удаляем задачи из истории перед очисткой
+        for (Integer taskId : tasks.keySet()) {
+            historyManager.remove(taskId);
+        }
         tasks.clear();
+    }
+
+    public void clearAllEpics() {
+        // Удаляем эпики и их подзадачи из истории
+        for (Integer epicId : epics.keySet()) {
+            historyManager.remove(epicId);
+            Epic epic = epics.get(epicId);
+            for (Integer subtaskId : epic.getSubtaskIds()) {
+                historyManager.remove(subtaskId);
+            }
+        }
+        epics.clear();
+        subtasks.clear();
+    }
+
+    public void clearAllSubtasks() {
+        // Удаляем подзадачи из истории
+        for (Integer subtaskId : subtasks.keySet()) {
+            historyManager.remove(subtaskId);
+        }
+        subtasks.clear();
+
+        // Обновляем статусы всех эпиков
+        for (Epic epic : epics.values()) {
+            epic.getSubtaskIds().clear();
+            updateEpicStatus(epic.getId());
+        }
     }
 
     @Override
@@ -169,8 +202,7 @@ public class InMemoryTaskManager implements TaskManager {
         return result;
     }
 
-    @Override
-    public void updateEpicStatus(int epicId) {
+    private void updateEpicStatus(int epicId) {
         Epic epic = epics.get(epicId);
         if (epic == null) {
             return;
@@ -182,30 +214,24 @@ public class InMemoryTaskManager implements TaskManager {
             return;
         }
 
-        boolean hasNew = false;
-        boolean hasInProgress = false;
-        boolean hasDone = false;
+        boolean allNew = true;
+        boolean allDone = true;
 
         for (Subtask subtask : epicSubtasks) {
-            switch (subtask.getStatus()) {
-                case NEW:
-                    hasNew = true;
-                    break;
-                case IN_PROGRESS:
-                    hasInProgress = true;
-                    break;
-                case DONE:
-                    hasDone = true;
-                    break;
+            if (subtask.getStatus() != Status.NEW) {
+                allNew = false;
+            }
+            if (subtask.getStatus() != Status.DONE) {
+                allDone = false;
             }
         }
 
-        if (hasInProgress || (hasNew && hasDone)) {
-            epic.setStatus(Status.IN_PROGRESS);
-        } else if (hasDone && !hasNew && !hasInProgress) {
+        if (allDone) {
             epic.setStatus(Status.DONE);
-        } else if (hasNew && !hasDone && !hasInProgress) {
+        } else if (allNew) {
             epic.setStatus(Status.NEW);
+        } else {
+            epic.setStatus(Status.IN_PROGRESS);
         }
     }
 

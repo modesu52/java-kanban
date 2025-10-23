@@ -48,10 +48,10 @@ public class Task {
 
     @Override
     public String toString() {
-        return "ru.models.Task{" +
-                "name='" + name + '\'' +
+        return "Task{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
-                ", id=" + id +
                 ", status=" + status +
                 '}';
     }

@@ -3,7 +3,6 @@ package ru.manager;
 import ru.models.Epic;
 import ru.models.Subtask;
 import ru.models.Task;
-
 import java.util.ArrayList;
 
 public interface TaskManager {
@@ -37,11 +36,13 @@ public interface TaskManager {
 
     void deleteSubtask(int id);
 
-    void clearAllTasks();
-
     ArrayList<Subtask> getEpicSubtasks(int epicId);
 
-    void updateEpicStatus(int epicId);
-
     ArrayList<Task> getHistory();
+
+    void clearAllTasks();
+
+    void clearAllEpics();
+
+    void clearAllSubtasks();
 }
